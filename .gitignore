@@ -11,5 +11,6 @@ Thumbs.db
 
 build/
 dist/
+yolo/training/dataset
 
 *.log
