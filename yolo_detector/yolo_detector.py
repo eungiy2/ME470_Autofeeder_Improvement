@@ -74,6 +74,25 @@ class YOLODetector:
                 center = ((bbox[0]+bbox[2])//2, (bbox[1]+bbox[3])//2)
                 axes = ((bbox[2]-bbox[0])//2, (bbox[3]-bbox[1])//2)
                 cv2.ellipse(img, center, axes, 0, 0, 360, (0,255,0), LINE_THICKNESS)
+                
+                img_h, img_w = img.shape[:2]
+                base_width = 640 
+                scale = img_w / base_width * 0.5
+
+                label = {0: "Dimple", 1: "Inner Center"}[cls]
+                lbl_margin = int(3 * scale)  
+                font_scale = 1.0 * scale
+                thickness = max(1, int(2 * scale))
+
+                label_size = cv2.getTextSize(label, fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_scale, thickness=thickness)
+                lbl_w, lbl_h = label_size[0]
+                lbl_w += 2 * lbl_margin
+                lbl_h += 2 * lbl_margin
+
+                img = cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[0]+lbl_w, bbox[1]-lbl_h), color=(0, 0, 255), thickness=-1)
+                cv2.putText(img, label, (bbox[0]+lbl_margin, bbox[1]-lbl_margin),
+                            fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=font_scale, color=(255, 255, 255), thickness=thickness)
+                
             else:  # rectangle for others
                 cv2.rectangle(img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0,0,255), LINE_THICKNESS)
                 
